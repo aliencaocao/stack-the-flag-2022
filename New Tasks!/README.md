@@ -19,7 +19,7 @@ Googling for "Girudo project" yields nothing interesting due to a similarly name
 
 From the description, the word 'project' hinted me to look for Github repositories, because people usually call them projects, and also because this is a CTF so it got a higher chance to be programming-related. Lastly, there are too many past OSINT challenges in ctfs where they leaked the flag in commit history.
 
-Indeed, searching for 'Girudo' for repositories only have 5 results, and there is only 1 that is updated in 2022. It is very unlikely that such a OSINT challenge will the set in 2021.
+Indeed, searching for 'Girudo' for repositories only have 5 results, and there is only 1 that is updated in 2022. It is very unlikely that such a OSINT challenge will the set in 2021 or earlier, thus we can check out the 2022 one first.
 
 ![img.png](img.png)
 
