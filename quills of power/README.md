@@ -46,7 +46,7 @@ Notice how `sub_1159` is being called twice with different arguments (random see
 
 `unk_2008` is the first seed, and `a2022` is the second. First one seems to be "STF" with 2 zero bytes, and second one is just ascii text "2022". Of course, this would not be the seed we need to find, because these seeds give non-readable bytes.
 
-Interesting, if we just scroll down a little bit, right below `a2022` in the data section, we can see some bytes that looks like the header of a zip file:
+Interestingly, if we just scroll down a little, right below `a2022` in the data section, we can see some bytes that looks like the header of a zip file:
 
 ![img_2.png](img_2.png)
 
