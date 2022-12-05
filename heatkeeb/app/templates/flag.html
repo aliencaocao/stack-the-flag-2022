@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HeatKeeb</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h1><a href="/menu">HeatKeeb</a></h1>
+    <p>Check your latest favourite word</p>
+    <form action="/text" method="post">
+        <input type="text" name="text" placeholder="Text">
+        <input type="submit" value="Submit">
+    </form>
+    {% if word %}That is indeed your favourite word!{% endif %} {{ flag }}
+</body>
+</html>

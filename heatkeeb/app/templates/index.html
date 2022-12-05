@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HeatKeeb</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h1>HeatKeeb</h1>
+    <p>Welcome to HeatKeeb! If you have a token, enter it here!</p>
+    <form action="/menu" method="post">
+        <input type="text" name="token" placeholder="Token">
+        <input type="submit" value="Submit">
+    </form>
+    <p>Create a keeb at <a href="/build" class="highlight">/build</a></p>
+</body>
+</html>

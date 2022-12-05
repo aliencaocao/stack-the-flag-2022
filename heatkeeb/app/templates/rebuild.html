@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HeatKeeb</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h1><a href="/menu">HeatKeeb</a></h1>
+    <p>Set the new colors for your keeb!</p>
+    <form method="post">
+        <label for="frameColor">Select your Frame Color:</label>
+        <input type="color" name="frameColor" class="color">
+        <label for="keyColor">Select your Key Color:</label>
+        <input type="color" name="keyColor" class="color">
+        <label for="textColor">Select your Text Color:</label>
+        <input type="color" name="textColor" class="color">
+        <label for="specialColor">Select your Special Color:</label>
+        <input type="color" name="specialColor" class="color">
+        <input type="submit" value="Submit" class="button">
+    </form>
+    {% if resp %}
+        <p>{{ resp }}</p>
+        <p>Back to <a href="/menu" class="highlight">menu</a></p>
+    {% endif %}
+</body>
+</html>

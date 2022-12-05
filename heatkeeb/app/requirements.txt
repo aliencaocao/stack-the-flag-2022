@@ -1,0 +1,10 @@
+numpy
+Pillow
+imgrender
+pytz
+fastapi
+uvicorn
+gunicorn
+itsdangerous
+jinja2
+python-multipart
