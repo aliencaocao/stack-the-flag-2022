@@ -11,12 +11,15 @@ Jaga was returning from a nearby convenience store when it was suddenly summoned
 2. Start the game, and open the process in Cheat Engine:
 
 ![](1.png)
+
 3. The idea is to scan for the memory address that stores the score. Most programs (including this one) will store them in the memory segment used by the program executable itself, and not any other DLLs, since this game does not come with any other DLL. To filter out the noise and make scanning faster, we can thus limit the memory scan to the executable itself, by selecting it under memort scan options:
 
 ![](2.png)
+
 4. We can start a game and before we score anything or die, we scan for the current score. Usually we start with the 'byte' type since it is the most commonly used, but if you are not sure, you can always scan for all data types. Select 'Byte' for Scan Type, and enter 0 for value. 0 is our current score since we have not passed any pipes. A neat feature of this game is if you switch your focus to another window, the game pauses itself, so you can take your time to scan. You can also enable SpeedHack in Cheat Engine and slow it down if you cannot switch windows fast enough. Click First Scan. Cheat Engine will return a list of memory addresses that currently holds the value '0'.
 
 ![](3.png)
+
 5. Don't be scared by the sheer amount of addresses found - you will need to repeat step 4 as your score changes, since if a memory address is not used for storing the score, it is almost certain that it will change to some other value different from your current score at some point.
 
 For example, now I have score of 1, I will scan for value 1 and press Next Scan (not New Scan!). Cheat Engine will filter the current list of memory addresses to only contain those that currently holds the value '1'.  Depending on luck, you may need to repeat step 4 for a couple of times, until you are left with addresses that you observe reliably changes with your current score. For this binary, the score is not being reset to 0 after you die, but to be safe, I did all the scanning while alive (and paused).
@@ -121,6 +124,7 @@ Last seen:11:52:29
 ![](10.png)
 
 14. Move the cursor to that line `cmp rsi,45`, double click on that line, and change the instruction to `cmp rsi,1`:
+
 ![](11.png)
 
 15. Then we can just play the game and get 1. You will see a small text at top left that says flag has been saved. We then now go to the folder that holds the executable (or the working directory, if it is not the same as the location of the executable), and open nice_flag.bin with text editor.
