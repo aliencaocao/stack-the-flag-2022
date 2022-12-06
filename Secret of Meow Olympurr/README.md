@@ -366,7 +366,7 @@ r = lambda_client.invoke(
 We can do a test run and make sure our AWS credentials are valid and correctly invokes the Lambda function. This allows us to move on to AWS CLI and proceed from there. We will need this snippet again later.
 
 # AWS
-Logging in go AWS CLI using aws configure and set the profile name and access key and secret key, and set the default region be `ap-southeast-1`. We can now do some enumeration to find out more about our AWS credential.
+Logging in go AWS CLI using `aws configure` and set the profile name and access key (`AKIA5G4XMRW7TLT6XD7R`) and secret key (`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`), and set the default region be `ap-southeast-1`. We can now do some enumeration to find out more about our AWS credential.
 
 I use [pacu](https://github.com/RhinoSecurityLabs/pacu) for this purpose, but you can use other tools you like. We can first do `run iam__bruteforce_permissions` and then `whoami` to find out what permissions do we have. Note that while this list can be incomplete, it is enough for us to try out things.
 
