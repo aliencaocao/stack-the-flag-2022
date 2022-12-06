@@ -37,7 +37,7 @@ Stuck again, I decided to go back to looking for the AWS S3 bucket. I naively ju
 
 I realised now that since AWS Cloudfront serves site from a S3 bucket, the Azure version must also serve from some Azure storage service. Lazy and short of time to read the Azure docs, I resorted to online brute force tools: https://github.com/initstring/cloud_enum. It worked surprisingly well when I tried to scan for `meowolympurr`, discovering a valid Azure Blob container (AWS S3 equivalent) at `https://meowolympurr.blob.core.windows.net/`. Command used to scan: `python3 cloud_enum.py -k meowolympurr `
 
-PICS HERE
+![img_16.png](img_16.png)
 
 Trying to access `https://meowolympurr.blob.core.windows.net/` directly, however, gave an error about some missing `comp` parameter. Passing in it in the URL gave another error. I figured it cannot be so easily accessed, so I turned back to the Azure version of the blog for more hints.
 
@@ -91,7 +91,7 @@ Client Secret: kmk8Q~mGYD9jNfgm~rcIOMRgiC9ekKtNEw5GPaS7
 ```
 Now I need to interpret the new information.
 1. There is another Blob container that contains the source code for the API, which is hosted on Azure Function 4.0 (can be found if we visit `https://olympurr-app.azurewebsites.net`).
-2. We have an Azure account that probably have enough previses for us to download the source code of the function.
+2. We have an Azure account that probably have enough privileges for us to download the source code of the function.
 
 Before anything, we should log in to Azure cli with the given credentials. I followed https://learn.microsoft.com/en-us/cli/azure/install-azure-cli to install Azure CLI (I'm on Windows).
 
@@ -292,9 +292,9 @@ Then I followed https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/
   }
 ]
 ```
-That looked like a lot of info, but essentially there are only 2 storage accounts under this tenant (Azure's way of calling a user account): `meowolympurr` and `meowvellousappstorage`, and one of them must be the one holding the `scm-releases` blob container. We can first try the one we already have, namely `https://meowolympurr.blob.core.windows.net/`
+That looked like a lot of info, but essentially there are only 2 storage accounts under this tenant (Azure's way of calling a user account): `meowolympurr` and `meowvellousappstorage`, and one of them must be the one holding the `scm-releases` blob container.
 
-The way that a SAS URL is constructed is as follows: storage endpoint + SAS Token. The full URL should be `https://meowvellousappstorage.blob.core.windows.net/?sv=2018-11-09&sr=c&st=2022-09-01T00%3A00%3A00Z&se=2022-12-12T00%3A00%3A00Z&sp=rl&spr=https&sig=jENgCFTrC1mYM1ZNo%2F8pq1Hg9BO1VLbXlk%2FpABrK4Eo%3D`. Pasting this into Azure Storage Explorer as a Storage account and Service will however result in an error:
+The way that a SAS URL is constructed is as follows: storage endpoint + SAS Token. We can first try the one we already have, namely `https://meowolympurr.blob.core.windows.net/`, however it says invalid signature. So I went to try the other one. The full URL should be `https://meowvellousappstorage.blob.core.windows.net/?sv=2018-11-09&sr=c&st=2022-09-01T00%3A00%3A00Z&se=2022-12-12T00%3A00%3A00Z&sp=rl&spr=https&sig=jENgCFTrC1mYM1ZNo%2F8pq1Hg9BO1VLbXlk%2FpABrK4Eo%3D`. Pasting this into Azure Storage Explorer as a Storage account and Service will however result in an error:
 
 ![img_10.png](img_10.png)
 
@@ -302,7 +302,7 @@ The error message mentioned missing parameters `ss` and `srt`, but it is unlikel
 
 ![img_11.png](img_11.png)
 
-Another error. This time it prompts for missing path. I got stuck a bit here, but quickly realised that if we are trying to access a particular Blob container on the storage account and the URL is not for accounts, then the name of the container must appear somewhere in the URL. I then inserted the name of the container `scm-releases` before the parameters: `https://meowvellousappstorage.blob.core.windows.net/scm-releases?sv=2018-11-09&sr=c&st=2022-09-01T00%3A00%3A00Z&se=2022-12-12T00%3A00%3A00Z&sp=rl&spr=https&sig=jENgCFTrC1mYM1ZNo%2F8pq1Hg9BO1VLbXlk%2FpABrK4Eo%3D`
+Another error. This time it prompts for missing path. I got stuck here a bit, but quickly realised that if we are trying to access a particular Blob container on the storage account and the URL is not for accounts, then the name of the container must appear somewhere in the URL. I then inserted the name of the container `scm-releases` before the parameters: `https://meowvellousappstorage.blob.core.windows.net/scm-releases?sv=2018-11-09&sr=c&st=2022-09-01T00%3A00%3A00Z&se=2022-12-12T00%3A00%3A00Z&sp=rl&spr=https&sig=jENgCFTrC1mYM1ZNo%2F8pq1Hg9BO1VLbXlk%2FpABrK4Eo%3D`
 
 ![img_12.png](img_12.png)
 
@@ -314,8 +314,7 @@ And it worked! We can now see the contents of the Blob container:
 
 If we download and try to open with Windows Explorer, it will give an error. I then tried 7zip and it managed to extract but gave some warning about the zip file is not actually a zip file but a SquashFS format. I am guessing this is part of the challenge or this is just how Azure storage handles zip files internally. Extracting the file, we can see the source code for the AWS Lambda function, and the only noteworthy file is `__init__.py`. The file is uploaded [here](__init__.py).
 
-# AWS
-At a glance, it looks like the Lambda function is called `event-webservice`. There is also a key which looks like an AWS one: `AKIA5G4XMRW7TLT6XD7R`. `AKIA` is the prefix for permanent AWS IAM access key.
+At a glance, it looks like the Lambda function is called `event-webservice`. There is also a key which looks like an AWS one: `AKIA5G4XMRW7TLT6XD7R`. `AKIA` is the prefix for permanent AWS IAM access keys.
 
 If we try to run this part of the code, we will get an error since we do not have locally stored Azure credentials, so we cannot access the Azure Vault.
 ```python
@@ -366,6 +365,7 @@ r = lambda_client.invoke(
 ```
 We can do a test run and make sure our AWS credentials are valid and correctly invokes the Lambda function. This allows us to move on to AWS CLI and proceed from there. We will need this snippet again later.
 
+# AWS
 Logging in go AWS CLI using aws configure and set the profile name and access key and secret key, and set the default region be `ap-southeast-1`. We can now do some enumeration to find out more about our AWS credential.
 
 I use [pacu](https://github.com/RhinoSecurityLabs/pacu) for this purpose, but you can use other tools you like. We can first do `run iam__bruteforce_permissions` and then `whoami` to find out what permissions do we have. Note that while this list can be incomplete, it is enough for us to try out things.
